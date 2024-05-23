@@ -304,6 +304,10 @@ tag to tell browsers to render the gaps.
         Please
         <a id="wd-lipsum" href="https://www.lipsum.com">click here</a>
         to get dummy text<br/>  
+        <h4>YAWEN ZHENG's GitHub</h4>
+        Please
+        <a id="wd-github" href="https://github.khoury.northeastern.edu/yzheng76/kanbas-react-web-app">click here</a>
+        to get github kanbas-react-web-app repository<br/>  
 
 
 
