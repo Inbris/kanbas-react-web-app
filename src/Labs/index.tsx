@@ -5,9 +5,11 @@ import { Route, Routes, Navigate } from "react-router";
 import TOC from "./TOC";
 
 
+
 export default function Labs() {
   return (
     <div id="wd-labs">
+      <h1>YAWEN ZHENG</h1>
       <h1>Labs</h1>
       <TOC />
       <Routes>
@@ -17,6 +19,5 @@ export default function Labs() {
         <Route path="Lab3" element={<Lab3 />} />
       </Routes>
 
-      <Lab1 />
     </div>
 );}
