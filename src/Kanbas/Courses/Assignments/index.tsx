@@ -5,16 +5,14 @@ import { BsGripVertical } from 'react-icons/bs';
 import { AiOutlineFileText } from 'react-icons/ai';
 import "./index.css";
 import { useParams, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import * as db from "../../Database";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const navigate = useNavigate();
+
   const assignments = db.assignments.filter((a: { _id: string; course: string }) => a.course === cid);
 
-  const handleAssignmentClick = (assignment: { _id: string; course: string }) => {
-    navigate(`/courses/${cid}/assignments/${assignment._id}`);
-  };
   
     return (
       <div id="wd-assignments" className="p-3">
@@ -60,9 +58,10 @@ export default function Assignments() {
                 <BsGripVertical className="me-2 fs-3" />
                 <AiOutlineFileText className="me-2 fs-3 text-success" />
                 <div>
-                  <a className="wd-assignment-link fw-bold text-decoration-none text-dark" href="#/Kanbas/Courses/1234/Assignments/123">
+                <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignments._id}`} className="wd-assignment-link fw-bold text-decoration-none text-dark">
+                 
                   {assignments.title}
-                  </a>
+                  </Link>
                   <div className="text-muted">
                     <span className="text-danger">Multiple Modules</span> | Not available until {new Date(assignments.availableDate).toLocaleDateString()} at {new Date(assignments.availableDate).toLocaleTimeString()}
                      | <br /> Due {new Date(assignments.dueDate).toLocaleDateString()} at {new Date(assignments.dueDate).toLocaleTimeString()} 

@@ -16,7 +16,7 @@ export default function AssignmentEditor() {
       {assignments.map((assignment) => (
 
       <div key={assignment._id} className="assignment-form">
-        <Link to={`/course/${cid}/assignment/${assignment._id}`}></Link>
+      <Link to={`/course/${cid}/assignment/${assignment._id}`}></Link>
       <div className="row mb-3">
         <div className="col">
 
