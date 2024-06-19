@@ -1,7 +1,55 @@
 import { FaFileImport, FaFileExport } from 'react-icons/fa';
 import { Table, InputGroup, FormControl, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router";
+import * as db from '../../Database';
+import { Assignment } from './types';
+
 
 export default function Grades() {
+  const { cid } = useParams();
+  const [studentGrades, setStudentGrades] = useState<{
+    assignments: {
+      grade: string;
+      _id: string;
+      title: string;
+      course: string;
+      description: string;
+      points: number;
+      dueDate: string;
+      availableDate: string;
+    }[];
+    _id?: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    dob?: string;
+    role?: string;
+  }[]>([]);
+
+  const [courseAssignments, setCourseAssignments] = useState<Assignment[]>([]);
+
+  useEffect(() => {
+    const courseAssignments = db.assignments.filter(a => a.course === cid);
+    const enrolledStudents = db.enrollments
+      .filter(enrollment => enrollment.course === cid)
+      .map(enrollment => {
+        const user = db.users.find(user => user._id === enrollment.user);
+        const assignments = courseAssignments.map(assignment => {
+          const gradeEntry = db.grades.find(g => g.student === enrollment.user && g.assignment === assignment._id);
+          return {
+            ...assignment,
+            grade: gradeEntry ? gradeEntry.grade : "N/A"
+          };
+        });
+        return { ...user, assignments };
+      });
+
+    setStudentGrades(enrolledStudents);
+  }, [cid]);
+
+
   return (
     <div id="wd-grades" className="container mt-3">
       <h1 className="mb-4">Grades</h1>
@@ -34,59 +82,25 @@ export default function Grades() {
           aria-label="Search Assignments"
         />
       </InputGroup>
-      <Table responsive bordered hover className="table-striped mb-4">
+
+      <Table responsive bordered hover>
         <thead>
           <tr>
             <th>Student Name</th>
-            <th>A1 SETUP <br /> Out of 100</th>
-            <th>A2 HTML <br /> Out of 100</th>
-            <th>A3 CSS <br /> Out of 100</th>
-            <th>A4 BOOTSTRAP <br /> Out of 100</th>
+            {courseAssignments.map(assignment => (
+              <th key={assignment._id}>{assignment.title} <br /> Out of 100</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Jane Adams</td>
-            <td>100%</td>
-            <td>96.67%</td>
-            <td>92.18%</td>
-            <td>66.22%</td>
-          </tr>
-          <tr>
-            <td>Christina Allen</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-          </tr>
-          <tr>
-            <td>Sameer Ansari</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-          </tr>
-          <tr>
-            <td>Han Bao</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td><input type="text" value="88.00%" className="form-control" /></td>
-            <td>98.99%</td>
-          </tr>
-          <tr>
-            <td>Mahi Sai Srinivas Bobbili</td>
-            <td>100%</td>
-            <td>96.67%</td>
-            <td>98.37%</td>
-            <td>100%</td>
-          </tr>
-          <tr>
-            <td>Siran Cao</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-            <td>100%</td>
-          </tr>
+          {studentGrades.map(student => (
+            <tr key={student._id}>
+              <td>{student.firstName + ' ' + student.lastName}</td>
+              {student.assignments.map((assignment) => (
+                <td key={assignment._id}>{assignment.grade}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </Table>
     </div>

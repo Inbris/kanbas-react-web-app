@@ -7,6 +7,7 @@ import TOC from "./TOC";
 
 
 export default function Labs() {
+  console.log('Hello World!');
   return (
     <div id="wd-labs">
       <h1>YAWEN ZHENG</h1>
@@ -16,7 +17,7 @@ export default function Labs() {
         <Route path="/" element={<Navigate to="Lab1" />} />
         <Route path="Lab1" element={<Lab1 />} />
         <Route path="Lab2" element={<Lab2 />} />
-        <Route path="Lab3" element={<Lab3 />} />
+        <Route path="Lab3/*" element={<Lab3 />} />
       </Routes>
 
     </div>
