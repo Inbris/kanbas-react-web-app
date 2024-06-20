@@ -51,21 +51,19 @@ export default function Assignments() {
 
 
           <ul id="wd-assignment-list" className="list-group">
-          {assignments.map((assignments) => (
-          <li key={assignments._id} className="wd-assignment-list-item list-group-item p-3 mb-0 border-0 border-start border-5 border-success rounded-0">
+          {assignments.map((assignment) => (
+          <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 mb-0 border-0 border-start border-5 border-success rounded-0">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
                 <BsGripVertical className="me-2 fs-3" />
                 <AiOutlineFileText className="me-2 fs-3 text-success" />
                 <div>
-                <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignments._id}`} className="wd-assignment-link fw-bold text-decoration-none text-dark">
-                 
-                  {assignments.title}
-                  </Link>
+                <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} className="wd-assignment-link fw-bold text-decoration-none text-dark">
+                  {assignment.title}</Link>
                   <div className="text-muted">
-                    <span className="text-danger">Multiple Modules</span> | Not available until {new Date(assignments.availableDate).toLocaleDateString()} at {new Date(assignments.availableDate).toLocaleTimeString()}
-                     | <br /> Due {new Date(assignments.dueDate).toLocaleDateString()} at {new Date(assignments.dueDate).toLocaleTimeString()} 
-                     | {assignments.points} pts</div>
+                    <span className="text-danger">Multiple Modules</span> | Not available until {new Date(assignment.availableDate).toLocaleDateString()} at {new Date(assignment.availableDate).toLocaleTimeString()}
+                     | <br /> Due {new Date(assignment.dueDate).toLocaleDateString()} at {new Date(assignment.dueDate).toLocaleTimeString()} 
+                     | {assignment.points} pts</div>
                 </div>
               </div>
               <LessonControlButtons />

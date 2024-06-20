@@ -3,8 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import * as db from "../../Database";
 
 export default function AssignmentEditor() {
-  const { cid } = useParams();
+  const { cid, aid } = useParams();
   const assignments = db.assignments.filter(a => a.course === cid);
+  const assignment = db.assignments.find(a => a._id === aid && a.course === cid);
 
   const handleButton = () => {
     console.log('Button clicked');
@@ -16,7 +17,8 @@ export default function AssignmentEditor() {
       {assignments.map((assignment) => (
 
       <div key={assignment._id} className="assignment-form">
-      <Link to={`/course/${cid}/assignment/${assignment._id}`}></Link>
+      
+
       <div className="row mb-3">
         <div className="col">
 
