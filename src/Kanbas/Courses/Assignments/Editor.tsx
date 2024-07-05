@@ -2,12 +2,22 @@ import "./index.css";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import * as db from "../../Database";
 import React, { ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
 
+interface Assignment {
+  _id: string;
+  title: string;
+  description: string;
+  points: number;
+  dueDate: string;
+  availableDate: string;
+  course: string;
+}
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
   const navigate = useNavigate();
-  const assignment = db.assignments.find(a => a._id === aid && a.course === cid);
+  const [assignment, setAssignment] = useState(() => db.assignments.find(a => a._id === aid && a.course === cid));
 
   if (!assignment) {
     navigate(`/Kanbas/Courses/${cid}/Assignments`); 
@@ -56,53 +66,7 @@ export default function AssignmentEditor() {
           <input id="wd-points" value={assignment.points} onChange={(e) => handleInputChange(e, 'points')} className="form-control" />
         </div>
       
-       {/*
-        <div className="col-md-6">
-          <label htmlFor="wd-group" className="form-label">Assignment Group</label>
-          <select id="wd-group" className="form-control">
-            <option>Assignments</option>
-          </select>
-        </div>
-      </div>
-    *
-      <div className="row mb-3">
-        <div className="col-md-6">
-          <label htmlFor="wd-display-grade-as" className="form-label">Display Grade as</label>
-          <select id="wd-display-grade-as" className="form-control">
-            <option>Percentage</option>
-          </select>
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="wd-submission-type" className="form-label">Submission Type</label>
-          <select id="wd-submission-type" className="form-control">
-            <option>Online</option>
-          </select>
-        </div>
-      </div>
-      <fieldset className="mb-3">
-        <legend className="fs-6">Online Entry Options</legend>
-        <div className="form-check">
-          <input type="checkbox" id="wd-text-entry" className="form-check-input" />
-          <label htmlFor="wd-text-entry" className="form-check-label">Text Entry</label>
-        </div>
-        <div className="form-check">
-          <input type="checkbox" id="wd-website-url" className="form-check-input" />
-          <label htmlFor="wd-website-url" className="form-check-label">Website URL</label>
-        </div>
-        <div className="form-check">
-          <input type="checkbox" id="wd-media-recordings" className="form-check-input" />
-          <label htmlFor="wd-media-recordings" className="form-check-label">Media Recordings</label>
-        </div>
-        <div className="form-check">
-          <input type="checkbox" id="wd-student-annotation" className="form-check-input" />
-          <label htmlFor="wd-student-annotation" className="form-check-label">Student Annotation</label>
-        </div>
-        <div className="form-check">
-          <input type="checkbox" id="wd-file-upload" className="form-check-input" />
-          <label htmlFor="wd-file-upload" className="form-check-label">File Upload</label>
-    </div> 
-      </fieldset>
-      */}
+       
 
       <div className="row mb-3">
         <div className="col-md-6">

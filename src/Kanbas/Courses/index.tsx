@@ -1,4 +1,3 @@
-import { courses } from "../Database";
 import CoursesNavigation from "./Navigation";
 import Home from "./Home";
 import Modules from "./Modules";
@@ -10,7 +9,7 @@ import { FaAlignJustify } from 'react-icons/fa';
 
 
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();

@@ -6,14 +6,36 @@ import { AiOutlineFileText } from 'react-icons/ai';
 import "./index.css";
 import { useParams, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import * as db from "../../Database";
+
+import { useSelector, useDispatch} from "react-redux";
+import React, { useState } from "react";
+import { addAssignment, deleteAssignment, updateAssignment, editAssignment }  from "./reducer";
+
+
+
+interface State {
+  assignments: Assignment[]; 
+}
+
+interface Assignment {
+  _id: string;
+  title: string;
+  description: string;
+  points: number;
+  dueDate: string;
+  availableDate: string;
+  course: string;
+}
 
 export default function Assignments() {
   const { cid } = useParams();
+  const [assignmentsName, setAssignmentsName] = useState("");
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
 
-  const assignments = db.assignments.filter((a: { _id: string; course: string }) => a.course === cid);
+  const navigate = useNavigate();
 
-  
+
     return (
       <div id="wd-assignments" className="p-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -28,14 +50,24 @@ export default function Assignments() {
           />
         </div>
         <div>
-          <button id="wd-add-assignment-group" className="btn btn-secondary me-2">
+          <button id="wd-add-assignment-group" className="btn btn-secondary me-2" >
             <FaPlus className="me-1" />
             Group
           </button>
-          <button id="wd-add-assignment" className="btn btn-danger">
+
+      
+          <button type="button" id="wd-add-assignment" className="btn btn-danger me-2" onClick={() => {
+            dispatch(addAssignment({ title: assignmentsName, course: cid }));
+            setAssignmentsName(""); 
+            navigate('/Kanbas/Courses/${cid}/Assignments/Editor'); 
+          }}>
             <FaPlus className="me-1" />
-            Assignment
+            Add Assignment
           </button>
+
+
+          
+
         </div>
       </div>
 
@@ -45,20 +77,23 @@ export default function Assignments() {
               <BsGripVertical className="me-2 fs-3" />
               ASSIGNMENTS
             </div>
-            <AssignmentControlButtons />
+            <AssignmentControlButtons
+            />
           </div>
 
 
 
           <ul id="wd-assignment-list" className="list-group">
-          {assignments.map((assignment) => (
+          {assignments.map((assignment: Assignment) => (
           <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 mb-0 border-0 border-start border-5 border-success rounded-0">
-            <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} className="wd-assignment-link fw-bold text-decoration-none text-dark">
+             <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} className="wd-assignment-link fw-bold text-decoration-none text-dark"> 
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
                 <BsGripVertical className="me-2 fs-3" />
                 <AiOutlineFileText className="me-2 fs-3 text-success" />
                 <div>
+               
+                
                   <div>{assignment.title}</div>
                   <div className="text-muted">
                     <span className="text-danger">Multiple Modules</span> | Not available until {new Date(assignment.availableDate).toLocaleDateString()} at {new Date(assignment.availableDate).toLocaleTimeString()}
@@ -67,8 +102,17 @@ export default function Assignments() {
                      </div>
                 </div>
               </div>
-              <LessonControlButtons />
+              <LessonControlButtons 
+              assignmentId={assignments._id}
+              deleteAssignment={(assignmentId) => {
+                dispatch(deleteAssignment(assignmentId));
+              }}
+              editAssignment={(assignmentId) => dispatch(editAssignment(assignmentId))}
+
+            
+              />
             </div>
+    
             </Link>
           </li>
           ))}        
