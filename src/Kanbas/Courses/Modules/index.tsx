@@ -1,13 +1,15 @@
 import { useParams } from "react-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import ModulesControls from "./ModulesControls"
 import LessonControlButtons from "./LessonControlButtons"
 import ModuleControlButtons from "./ModuleControlButtons"
 import { BsGripVertical } from 'react-icons/bs';
 
-import { addModule, editModule, updateModule, deleteModule }
+import { setModules, addModule, editModule, updateModule, deleteModule }
   from "./reducer";
+import * as client from "./client";
+
 import { useSelector, useDispatch } from "react-redux";
 import { Module } from "./types";
 import { Lesson} from "./types";
@@ -15,18 +17,47 @@ import { Lesson} from "./types";
 export default function Modules() {
   
   const { cid } = useParams();
-  
-  const [moduleName, setModuleName] = useState("");
-
   const { modules } = useSelector((state: any) => state.modulesReducer);
+  const [moduleName, setModuleName] = useState("");
   const dispatch = useDispatch();
   
+  // retrieving a module
+  const fetchModules = async () => {
+    const modules = await client.findModulesForCourse(cid as string);
+    dispatch(setModules(modules));
+  };
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
+  // create a module (add)
+  const createModule = async (module: any) => {
+    const newModule = await client.createModule(cid as string, module);
+    dispatch(addModule(newModule));
+  };
+
+  // delete a module
+  const removeModule = async (moduleId: string) => {
+    await client.deleteModule(moduleId);
+    dispatch(deleteModule(moduleId));
+  };
+
+  // update or save a module
+  const saveModule = async (module: any) => {
+    const status = await client.updateModule(module);
+    dispatch(updateModule(module));
+  };
+
+
+
+
+  // UI elements
   return (
 
       <div className="wd-modules">
         <ModulesControls moduleName={moduleName} setModuleName={setModuleName}
           addModule={() => {
-            dispatch(addModule({ name: moduleName, course: cid }));
+            createModule({ name: moduleName, course: cid });
             setModuleName("");
           }}
         /><br /><br /><br /><br />
@@ -43,16 +74,18 @@ export default function Modules() {
             ) : (
               <input
                 className="form-control w-50 d-inline-block"
-                onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
-                onKeyDown={(e) => e.key === "Enter" && dispatch(updateModule({ ...module, editing: false }))}
-                value={module.name}
+                onChange={(e) => saveModule({ ...module, name: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    saveModule({ ...module, editing: false });
+                  }
+                }}
               />
             )}
-            <ModuleControlButtons
-              moduleId={module._id}
-              deleteModule={() => dispatch(deleteModule(module._id))}
-              editModule={() => dispatch(editModule(module._id))}
-            />
+            
+            <ModuleControlButtons moduleId={module._id}
+                  deleteModule={(moduleId) => { removeModule(moduleId); }}
+                  editModule={(moduleId) => dispatch(editModule(moduleId))} />
             
             <ul className="wd-lessons list-group rounded-0">
             {module.lessons && module.lessons.map((lesson) => (

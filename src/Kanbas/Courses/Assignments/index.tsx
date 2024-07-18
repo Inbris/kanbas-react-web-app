@@ -8,9 +8,10 @@ import { useParams, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 import { useSelector, useDispatch} from "react-redux";
-import React, { useState } from "react";
-import { addAssignment, deleteAssignment, updateAssignment, editAssignment }  from "./reducer";
+import React, { useState, useEffect } from "react";
+import { setAssignments, addAssignment, deleteAssignment, updateAssignment, editAssignment }  from "./reducer";
 
+import * as client from "./client";
 
 
 interface State {
@@ -28,12 +29,40 @@ interface Assignment {
 }
 
 export default function Assignments() {
+
   const { cid } = useParams();
   const [assignmentsName, setAssignmentsName] = useState("");
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  // retrieving an assignment
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentforCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+  // create an assignment (add)
+  const createAssignment = async (assignment: any) => {
+    const newAssignment = await client.createAssignment(cid as string, assignment);
+    dispatch(addAssignment(newAssignment));
+  };
+
+  // delete an assignment
+  const removeAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+
+  // update or save an assignment
+  const saveAssignment = async (assignment: any) => {
+    const status = await client.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  };
 
 
     return (
@@ -105,10 +134,10 @@ export default function Assignments() {
               <LessonControlButtons 
               assignmentId={assignments._id}
               deleteAssignment={(assignmentId) => {
-                dispatch(deleteAssignment(assignmentId));
+                removeAssignment(assignmentId);
               }}
-              editAssignment={(assignmentId) => dispatch(editAssignment(assignmentId))}
-
+              editAssignment={(assignmentId) => dispatch(editAssignment(assignmentId))} //...?
+              
             
               />
             </div>
