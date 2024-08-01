@@ -33,7 +33,7 @@ export default function HttpClient() {
       <button className="btn btn-primary me-2" onClick={fetchWelcomeOnClick}>
         Fetch Welcome
       </button> <br />
-      Response from server: <b>{welcomeOnClick}</b>
+      Response from server: <b>{welcomeOnClick}</b> 
 
       <h4>Requesting on Load</h4>
       Response from server: <b>{welcomeOnLoad}</b>
