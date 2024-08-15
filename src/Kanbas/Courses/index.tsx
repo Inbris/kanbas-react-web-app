@@ -7,6 +7,9 @@ import Grades from "./Grades";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from 'react-icons/fa';
 import PeopleTable from "./People/Table";
+import Quizzes from "./Quizzes";
+import QuizeCreator from "./Quizzes/QuizzCreator";
+import QuizeDetail from "./Quizzes/QuizzDetail";
 
 
 
@@ -21,6 +24,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
       <h2 className="text-danger">
         <FaAlignJustify className="me-4 fs-4 mb-1" />
         {course && course.name}  &gt; {pathname.split("/")[4]}
+        {pathname.split("/")[5] && ' > '} {pathname.split("/")[5]}
 
       </h2>
 
@@ -39,6 +43,9 @@ export default function Courses({ courses }: { courses: any[]; }) {
               <Route path="/Grades" element={<Grades />} />
               <Route path="/People" element={<PeopleTable />} />
               <Route path="/People/:uid" element={<PeopleTable />} />
+              <Route path="/Quizzes" element={<Quizzes />} />
+                <Route path="/Quizzes/QuizCreator" element={<QuizeCreator />} />
+                <Route path="/Quizzes/QuizDetail/:qid" element={<QuizeDetail />} />
             </Routes>
         </div>
       </div>

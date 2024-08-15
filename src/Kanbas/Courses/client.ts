@@ -26,3 +26,27 @@ export const updateCourse = async (course: any) => {
   const response = await axios.put(`${COURSES_API}/${course._id}`, course);
   return response.data;
 };
+
+// get creator courses
+export const getCreatorCourses = async (id: string) => {
+  const response = await axios.get(`${COURSES_API}/creator/${id}`);
+  return response.data;
+};
+
+// get enrolled courses
+export const getEnrolledCourses = async (id: string) => {
+  const response = await axios.get(`${COURSES_API}/student/${id}`);
+  return response.data;
+};
+
+// enroll a courses
+export const enrollCourse = async (courseId: string,studentId: string) => {
+  const response = await axios.post(`${COURSES_API}/${courseId}/students/${studentId}`);
+  return response.data;
+};
+
+// unenrolled a courses
+export const unenrollCourse = async (courseId: string,studentId: string) => {
+  const response = await axios.delete(`${COURSES_API}/${courseId}/students/${studentId}`);
+  return response.data;
+};
